@@ -1,0 +1,31 @@
+# Java class files
+*.class
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.sw?
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+*.local
+
+# Generated files
+dependency-reduced-pom.xml
+buildNumber.properties
+release.properties
