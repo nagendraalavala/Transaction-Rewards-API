@@ -23,6 +23,7 @@ Thumbs.db
 
 # Environment files
 .env
+!.env.example
 *.local
 
 # Generated files

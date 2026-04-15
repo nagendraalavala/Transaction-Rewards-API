@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [assessment/TransactionRewardsAPI]
+  pull_request:
+    branches: [assessment/TransactionRewardsAPI]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build with Maven
+        run: ./mvnw clean package -B
+
+      - name: Run tests
+        run: ./mvnw test -B
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t rewards-api:${{ github.sha }} .
+
+      - name: Verify Docker image starts
+        run: |
+          docker run -d --name rewards-api-test \
+            -p 8080:8080 \
+            rewards-api:${{ github.sha }}
+          sleep 15
+          curl -f http://localhost:8080/actuator/health || exit 1
+          docker stop rewards-api-test
