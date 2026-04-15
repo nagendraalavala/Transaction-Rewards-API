@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.assessment.rewards.util.DataInitializer.calculatePointsForTransaction;
+import static com.assessment.rewards.util.InputSanitizer.sanitizeForLog;
 
 @Slf4j
 @Service
@@ -50,11 +51,11 @@ public class RewardsServiceImpl implements RewardsService {
             throw new IllegalArgumentException("customerId must not be blank");
         }
 
-        log.info("Fetching rewards for customerId={}", customerId);
+        log.info("Fetching rewards for customerId={}", sanitizeForLog(customerId));
 
         List<Transaction> transactions = transactionRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> {
-                    log.warn("No transactions found for customerId={}", customerId);
+                    log.warn("No transactions found for customerId={}", sanitizeForLog(customerId));
                     return new CustomerNotFoundException("No transactions found for customerId: " + customerId);
                 });
 

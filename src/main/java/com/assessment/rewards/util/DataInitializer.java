@@ -3,11 +3,13 @@ package com.assessment.rewards.util;
 import com.assessment.rewards.entity.Transaction;
 import com.assessment.rewards.repository.TransactionRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
 @Component
+@Profile("dev")
 public class DataInitializer {
 
     private final TransactionRepository repository;

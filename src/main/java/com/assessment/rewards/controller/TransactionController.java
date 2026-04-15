@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class TransactionController {
             @Parameter(description = "Page number")
             @RequestParam(defaultValue = "0") @Min(value = 0, message = "Page must be 0 or greater") int page,
             @Parameter(description = "Page size")
-            @RequestParam(defaultValue = "10") @Min(value = 1, message = "Size must be at least 1") int size
+            @RequestParam(defaultValue = "10") @Min(value = 1, message = "Size must be at least 1") @Max(value = 100, message = "Size must not exceed 100") int size
     ) {
         return service.getFilteredTransactions(customerId, page, size);
     }

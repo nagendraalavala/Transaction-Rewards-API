@@ -1,6 +1,7 @@
 package com.assessment.rewards.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
     
@@ -59,10 +61,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
+        log.error("Unhandled exception", ex);
         return ResponseEntity.internalServerError().body(Map.of(
                 TIMESTAMP, LocalDateTime.now(),
-                ERROR, "Internal server error",
-                "details", ex.getMessage()
+                ERROR, "Internal server error"
         ));
     }
 }
