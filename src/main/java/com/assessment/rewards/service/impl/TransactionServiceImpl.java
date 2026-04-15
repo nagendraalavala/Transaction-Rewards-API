@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.assessment.rewards.util.DataInitializer.calculatePointsForTransaction;
+import static com.assessment.rewards.util.InputSanitizer.sanitizeForLog;
 
 @Slf4j
 @Service
@@ -33,7 +34,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new IllegalArgumentException("date must not be null");
         }
 
-        log.info("Processing transaction for customerId={}", request.customerId());
+        log.info("Processing transaction for customerId={}", sanitizeForLog(request.customerId()));
 
         Transaction transaction = new Transaction();
         transaction.setCustomerId(request.customerId());
@@ -42,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setRewards(calculatePointsForTransaction(request.amount()));
 
         Transaction saved = transactionRepository.save(transaction);
-        log.info("Transaction saved | customerId={}, transactionId={}", request.customerId(), saved.getId());
+        log.info("Transaction saved | customerId={}, transactionId={}", sanitizeForLog(request.customerId()), saved.getId());
 
         return saved;
     }
@@ -57,7 +58,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new IllegalArgumentException("size must be > 0");
         }
 
-        log.info("Fetching transactions | customerId={}, page={}, size={}", customerId, page, size);
+        log.info("Fetching transactions | customerId={}, page={}, size={}", sanitizeForLog(customerId), page, size);
 
         List<Transaction> base = hasText(customerId)
                 ? transactionRepository.findByCustomerId(customerId).orElseGet(List::of)
