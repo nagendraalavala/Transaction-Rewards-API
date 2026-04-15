@@ -43,6 +43,16 @@ jobs:
           docker run -d --name rewards-api-test \
             -p 8080:8080 \
             rewards-api:${{ github.sha }}
-          sleep 15
-          curl -f http://localhost:8080/actuator/health || exit 1
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/actuator/health; then
+              echo " Health check passed"
+              docker stop rewards-api-test
+              exit 0
+            fi
+            echo "Waiting for app to start... attempt $i/30"
+            sleep 5
+          done
+          echo "App failed to start within timeout"
+          docker logs rewards-api-test
           docker stop rewards-api-test
+          exit 1
